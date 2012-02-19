@@ -19,7 +19,7 @@ window.onload = ->
   Crafty.init 400, 320
   Crafty.canvas.init
 
-  Crafty.sprite 16, "lib/images/sprite.png",
+  Crafty.sprite 16, "client/images/sprite.png",
     grass1: [ 0, 0 ]
     grass2: [ 1, 0 ]
     grass3: [ 2, 0 ]
@@ -30,7 +30,7 @@ window.onload = ->
     player: [ 0, 3 ]
 
   Crafty.scene "loading", ->
-    Crafty.load "lib/images/sprite.png", ->
+    Crafty.load "client/images/sprite.png", ->
       Crafty.scene "main"
 
   Crafty.background "#000"
