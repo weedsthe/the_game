@@ -9,15 +9,14 @@ window.onload = ->
       
         grassType = Crafty.math.randomInt(1, 4)
         Crafty.e("2D, Canvas, grass"+grassType).attr
-          x: i*16 
-          y: i*16 
-
+          x: i * 16 
+          y: j * 16 
         j++
       i++
     i = 0
 
   Crafty.init 400, 320
-  Crafty.canvas.init
+  Crafty.canvas.init()
 
   Crafty.sprite 16, "client/images/sprite.png",
     grass1: [ 0, 0 ]
@@ -30,7 +29,7 @@ window.onload = ->
     player: [ 0, 3 ]
 
   Crafty.scene "loading", ->
-    Crafty.load "client/images/sprite.png", ->
+    Crafty.load [ "client/images/sprite.png" ], ->
       Crafty.scene "main"
 
   Crafty.background "#000"
