@@ -63,21 +63,23 @@ window.onload = ->
   Crafty.scene "main", ->
     generateWorld()
     Crafty.c "CustomControls",
-
       __move:
         left: false
         right: false
         up: false
         down: false
 
+      _speed: 3
+
       init: ->
         @requires "SpriteAnimation"
+        @requires "Keyboard"
 
-      _speed: 3
       CustomControls: (speed) ->
         @_speed = speed  if speed
         move = @__move
-        @bind "enterframe", ->
+        @bind "EnterFrame", ->
+          console.log "right arrow " + @isDown("RIGHT_ARROW")
           if @isDown("RIGHT_ARROW")
             @x += @_speed
           else if @isDown("LEFT_ARROW")
