@@ -1,19 +1,14 @@
 window.onload = ->
 
   generateWorld = ->
-    i = 0
-    while i < 25
-      j = 0
-      
-      while j < 20
-      
+
+    _(_.range(25)).each (i) ->
+      _(_.range(20)).each (j) ->
+
         grassType = Crafty.math.randomInt(1, 4)
         Crafty.e("2D, Canvas, grass"+grassType).attr
           x: i * 16 
           y: j * 16 
-        j++
-      i++
-    i = 0
 
   Crafty.init 400, 320
   Crafty.canvas.init()
