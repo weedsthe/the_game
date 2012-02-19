@@ -62,37 +62,56 @@ window.onload = ->
 
   Crafty.scene "main", ->
     generateWorld()
-    Crafty.c "Hero",
+    Crafty.c "CustomControls",
+
+      __move:
+        left: false
+        right: false
+        up: false
+        down: false
+
       init: ->
-        @requires("SpriteAnimation, Collision").animate("walk_left", 6, 3, 8).animate("walk_right", 9, 3, 11).animate("walk_up", 3, 3, 5).animate("walk_down", 0, 3, 2).bind("NewDirection", (direction) ->
-          @stop().animate "walk_left", 10, -1  unless @isPlaying("walk_left")  if direction.x < 0
-          @stop().animate "walk_right", 10, -1  unless @isPlaying("walk_right")  if direction.x > 0
-          @stop().animate "walk_up", 10, -1  unless @isPlaying("walk_up")  if direction.y < 0
-          @stop().animate "walk_down", 10, -1  unless @isPlaying("walk_down")  if direction.y > 0
-          @stop()  if not direction.x and not direction.y
-        ).bind "Moved", (from) ->
-          if @hit("solid")
-            @attr
-              x: from.x
-              y: from.y
+        @requires "SpriteAnimation"
+
+      _speed: 3
+      CustomControls: (speed) ->
+        @_speed = speed  if speed
+        move = @__move
+        @bind "enterframe", ->
+          if @isDown("RIGHT_ARROW")
+            @x += @_speed
+          else if @isDown("LEFT_ARROW")
+            @x -= @_speed
+          else if @isDown("UP_ARROW")
+            @y -= @_speed
+          else @y += @_speed  if @isDown("DOWN_ARROW")
 
         this
 
-    Crafty.c "RightControls",
-      init: ->
-        @requires "Multiway"
-
-      rightControls: (speed) ->
-        @multiway speed,
-          UP_ARROW: -90
-          DOWN_ARROW: 90
-          RIGHT_ARROW: 0
-          LEFT_ARROW: 180
-
-        this
-
-    player = Crafty.e("2D, Canvas, player, RightControls, Hero, Animate, Collision").attr(
+    player = Crafty.e("2D, Canvas, player, Controls, CustomControls, Animate, Collision").attr(
       x: 160
       y: 144
       z: 1
-    ).rightControls(1)
+    ).CustomControls(1).animate("walk_left", 6, 3, 8).animate("walk_right", 9, 3, 11).animate("walk_up", 3, 3, 5).animate("walk_down", 0, 3, 2).bind("enterframe", (e) ->
+      if @isDown("LEFT_ARROW")
+        @stop().animate "walk_left", 10  unless @isPlaying("walk_left")
+      else if @isDown("RIGHT_ARROW")
+        @stop().animate "walk_right", 10  unless @isPlaying("walk_right")
+      else if @isDown("UP_ARROW")
+        @stop().animate "walk_up", 10  unless @isPlaying("walk_up")
+      else @stop().animate "walk_down", 10  unless @isPlaying("walk_down")  if @isDown("DOWN_ARROW")
+    ).bind("keyup", (e) ->
+      @stop()
+    ).collision().onHit("wall_left", ->
+      @x += @_speed
+      @stop()
+    ).onHit("wall_right", ->
+      @x -= @_speed
+      @stop()
+    ).onHit("wall_bottom", ->
+      @y -= @_speed
+      @stop()
+    ).onHit("wall_top", ->
+      @y += @_speed
+      @stop()
+    )
