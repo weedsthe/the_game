@@ -15,14 +15,15 @@ loadControls = ->
     CustomControls: (speed) ->
       @_speed = speed  if speed
       move = @__move
-      @bind "EnterFrame", ->   
-        if @isDown("RIGHT_ARROW")
-          @x += @_speed
-        else if @isDown("LEFT_ARROW")
-          @x -= @_speed
-        else if @isDown("UP_ARROW")
-          @y -= @_speed
-        else @y += @_speed  if @isDown("DOWN_ARROW")
+      @bind "EnterFrame", ->  
+        if Crafty.frame()%5 == 0  
+          if @isDown("RIGHT_ARROW")          
+            @x += @_speed
+          else if @isDown("LEFT_ARROW")
+            @x -= @_speed
+          else if @isDown("UP_ARROW")
+            @y -= @_speed
+          else @y += @_speed  if @isDown("DOWN_ARROW")
 
 loadMisc = ->
   Crafty.scene "loading", ->
@@ -42,7 +43,7 @@ loadPlayer = ->
     x: 160
     y: 144
     z: 1
-  ).CustomControls(2).animate("walk_left", 6, 3, 8).animate("walk_right", 9, 3, 11).animate("walk_up", 3, 3, 5).animate("walk_down", 0, 3, 2).bind("EnterFrame", (e) ->
+  ).CustomControls(16).animate("walk_left", 6, 3, 8).animate("walk_right", 9, 3, 11).animate("walk_up", 3, 3, 5).animate("walk_down", 0, 3, 2).bind("EnterFrame", (e) ->
     if @isDown("LEFT_ARROW")
       @stop().animate "walk_left", 10  unless @isPlaying("walk_left")
     else if @isDown("RIGHT_ARROW")
@@ -50,10 +51,8 @@ loadPlayer = ->
     else if @isDown("UP_ARROW")
       @stop().animate "walk_up", 10  unless @isPlaying("walk_up")
     else @stop().animate "walk_down", 10  unless @isPlaying("walk_down")  if @isDown("DOWN_ARROW")
-  ).bind("KeyUp", (e) ->
-    @x = @x - @x%16
-    @y = @y - @y%16
-    @stop()
+  ).bind("KeyUp", (e) -> 
+    
   ).collision().onHit("wall_left", ->
     @x += @_speed
     @stop()
@@ -129,7 +128,7 @@ generateWorld = ->
 
 
 window.onload = ->
-  Crafty.init 400, 336
+  Crafty.init 400, 336, 50
   Crafty.canvas.init()
 
   loadSprites()
