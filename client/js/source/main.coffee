@@ -1,0 +1,1 @@
+require [ "client/js/lib/jquery.min.js", "client/js/lib/crafty.js", "client/js/lib/underscore.js", "game" ], ($) ->
